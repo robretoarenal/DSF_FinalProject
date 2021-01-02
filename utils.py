@@ -4,12 +4,13 @@ import pathlib
 class DataFetch(object):
 
     def __init__(self):
+
         self.DOWNLOAD_ROOT = "https://raw.githubusercontent.com/robretoarenal/DSF_FinalProject/main/"
         self.DS_PATH = os.path.join("datasets")
         self.GAMES_URL = DOWNLOAD_ROOT + "Data/spreadspoke_scores.csv"
         self.TEAMS_URL = DOWNLOAD_ROOT + "Data/nfl_teams.csv"
 
-    def fetch_data(games_url=GAMES_URL, teams_url=TEAMS_URL, ds_path=DS_PATH):
+    def fetch_data(games_url="Data/spreadspoke_scores.csv", teams_url=TEAMS_URL, ds_path=DS_PATH):
         if not os.path.isdir(ds_path):
             os.makedirs(ds_path)
         games_path = os.path.join(ds_path,'spreadspoke_scores.csv')
