@@ -18,7 +18,7 @@ class DataFetch(object):
         self.DOWNLOAD_ROOT = "https://raw.githubusercontent.com/robretoarenal/DSF_FinalProject/main/"
         self.DS_PATH = os.path.join("datasets")
         #self.GAMES_URL = DOWNLOAD_ROOT + "Data/spreadspoke_scores.csv"
-        self.TEAMS_URL = self.DOWNLOAD_ROOT + "Data/nfl_teams.csv"
+        self.TEAMS_URL = self.DOWNLOAD_ROOT + "datasets/nfl_teams.csv"
 
     def fetch_data(self):
         if not os.path.isdir(self.DS_PATH):
