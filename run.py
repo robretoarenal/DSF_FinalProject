@@ -12,4 +12,4 @@ if __name__ == "__main__":
     if st.button('Predict'):
         df=ScoresPredict().predict()
         st.header('Games of the week are:')
-        st.table(df)
+        st.table(df.assign(hack='').set_index('hack'))
