@@ -1,13 +1,15 @@
 import streamlit as st
-from utils import NflPredict
+from utils import ScoresPredict
 
 if __name__ == "__main__":
 
-    st.title('AJUAAA!')
-    st.write('This app is the final project of DSF class')
+    st.title('NFL games predictions')
+    st.write('This model predicts the winning probabilities for each team.')
+    #st.write('This app is the final project of DSF class')
 
-    df=NflPredict().predict()
-
-    #st.subheader('Selected values')
-    st.header('NFL games week 17 are:')
-    st.write(df)
+    #image = Image.open('nfl-1.jpg')
+    #st.image(image, use_column_width=True)
+    if st.button('Predict'):
+        df=ScoresPredict().predict()
+        st.header('Games of the week are:')
+        st.table(df)
