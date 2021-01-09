@@ -266,8 +266,8 @@ class ScoresETL(object):
         #Remove future games rows
         df = df[df['team1'].notna()]
         #Filter rows that we need onlny
-        df = df[['season','date','playoff','team1','team2','score1','score2',
-        'qbelo1_pre','qbelo2_pre','qbelo_prob1','qb1_game_value','qb2_game_value','result']]
+        #df = df[['season','date','playoff','team1','team2','score1','score2','qbelo1_pre','qbelo2_pre','qbelo_prob1','qb1_game_value','qb2_game_value','result']]
+        df = df[['season','date','playoff','team1','team2','score1','score2','qbelo1_pre','qbelo2_pre','qbelo_prob1','qb1_value_pre','qb2_value_pre','result']]
 
         return df
 
@@ -282,8 +282,8 @@ class ScoresETL(object):
 
         train_set_full = pipeline.fit_transform(train_set)
         train_set_full = train_set_full.dropna(how='any',axis=0)
-        features_full = train_set_full[['qbelo1_pre','qbelo2_pre','qbelo_prob1','qb1_game_value','qb2_game_value',
-        'hm_avg_diff','aw_avg_diff']]
+        #features_full = train_set_full[['qbelo1_pre','qbelo2_pre','qbelo_prob1','qb1_game_value','qb2_game_value','hm_avg_diff','aw_avg_diff']]
+        features_full = train_set_full[['qbelo1_pre','qbelo2_pre','qbelo_prob1','qb1_value_pre','qb2_value_pre','hm_avg_diff','aw_avg_diff']]
         results_full = train_set_full["result"].copy()
 
         scaler_path = os.path.join(pathlib.Path().absolute(), "scaler")
