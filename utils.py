@@ -267,7 +267,8 @@ class ScoresETL(object):
         df = df[df['team1'].notna()]
         #Filter rows that we need onlny
         #df = df[['season','date','playoff','team1','team2','score1','score2','qbelo1_pre','qbelo2_pre','qbelo_prob1','qb1_game_value','qb2_game_value','result']]
-        df = df[['season','date','playoff','team1','team2','score1','score2','qbelo1_pre','qbelo2_pre','qbelo_prob1','qb1_value_pre','qb2_value_pre','result']]
+        #df = df[['season','date','playoff','team1','team2','score1','score2','qbelo1_pre','qbelo2_pre','qbelo_prob1','qb1_value_pre','qb2_value_pre','result']]
+        df = df[['season','date','playoff','team1','team2','score1','score2','elo1_pre','elo2_pre','qbelo_prob1','qb1_value_pre','qb2_value_pre','result']]
 
         return df
 
@@ -283,7 +284,8 @@ class ScoresETL(object):
         train_set_full = pipeline.fit_transform(train_set)
         train_set_full = train_set_full.dropna(how='any',axis=0)
         #features_full = train_set_full[['qbelo1_pre','qbelo2_pre','qbelo_prob1','qb1_game_value','qb2_game_value','hm_avg_diff','aw_avg_diff']]
-        features_full = train_set_full[['qbelo1_pre','qbelo2_pre','qbelo_prob1','qb1_value_pre','qb2_value_pre','hm_avg_diff','aw_avg_diff']]
+        #features_full = train_set_full[['qbelo1_pre','qbelo2_pre','qbelo_prob1','qb1_value_pre','qb2_value_pre','hm_avg_diff','aw_avg_diff']]
+        features_full = train_set_full[['elo1_pre','elo2_pre','qbelo_prob1','qb1_value_pre','qb2_value_pre','hm_avg_diff','aw_avg_diff']]
         results_full = train_set_full["result"].copy()
 
         scaler_path = os.path.join(pathlib.Path().absolute(), "scaler")
@@ -372,7 +374,8 @@ class ScoresPredict(object):
         nc = newClass()
         df_trans = nc.mergeAttributes(df)
         #exclude games of past and future weeks.
-        df_trans = df_trans[df_trans['score1'].isna()]
+        #df_trans = df_trans[df_trans['score1'].isna()]
+        df_trans = df_trans.loc[(df_trans['playoff'].notna()) & (df_trans['season']==2020)]
         df_trans = df_trans[df_trans['hm_avg_diff'].notna()]
         #Choose the features to preduct.
         #df_features = df_trans[['qbelo1_pre','qbelo2_pre','qbelo_prob1','qb1_game_value','qb2_game_value','hm_avg_diff','aw_avg_diff']]
@@ -380,11 +383,13 @@ class ScoresPredict(object):
         #predict results.
         results=self.model.predict(df_features)
         #select the columns to show on the screen and add the results columns.
-        df_trans = df_trans[['season','date','hm_team_name','aw_team_name']]
-        df_trans.rename(columns={'hm_team_name':'Home Team', 'aw_team_name':'Away Team'}, inplace=True)
+        df_trans = df_trans[['season','date','hm_team_name','aw_team_name','score1','score2']]
+        df_trans.rename(columns={'hm_team_name':'Home Team', 'aw_team_name':'Away Team', 'score1':'HomeScore','score2':'AwayScore'}, inplace=True)
         df_trans.loc[:,'Home win prob'] = results
         df_trans.loc[:,'Away win prob'] = 1 - results
         df_trans['Home win prob'] = pd.Series(["{0:.0%}".format(val) for val in df_trans['Home win prob']], index = df_trans.index)
         df_trans['Away win prob'] = pd.Series(["{0:.0%}".format(val) for val in df_trans['Away win prob']], index = df_trans.index)
+        #order columns
+        df_trans = df_trans[['season','date','Home Team','Away Team','Home win prob','Away win prob','HomeScore','AwayScore']]
 
         return df_trans
